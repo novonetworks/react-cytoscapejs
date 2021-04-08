@@ -41,10 +41,13 @@ export default class CytoscapeComponent extends React.Component {
   constructor(props) {
     super(props);
     this.displayName = `CytoscapeComponent`;
+    this.containerRef = React.createRef()
   }
 
   componentDidMount() {
-    const container = ReactDOM.findDOMNode(this);
+    if (!this.containerRef.current) {
+      return
+    }
 
     const {
       global,
@@ -59,7 +62,7 @@ export default class CytoscapeComponent extends React.Component {
     } = this.props;
 
     const cy = (this._cy = new Cytoscape({
-      container,
+      container: this.containerRef.current,
       headless,
       styleEnabled,
       hideEdgesOnViewport,
@@ -102,7 +105,8 @@ export default class CytoscapeComponent extends React.Component {
     return React.createElement('div', {
       id,
       className,
-      style
+      style,
+      ref: this.containerRef,
     });
   }
 }
